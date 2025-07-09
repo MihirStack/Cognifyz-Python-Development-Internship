@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" class="transition-all duration-300">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Palindrome Checker</title>
+  <link rel="icon" href="/static/flip.png" type="image/x-icon" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+  </script>
+  <style>
+    .fade-in {
+      animation: fade 0.5s ease-out forwards;
+    }
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .flip {
+      animation: flipY 1s ease-in-out forwards;
+    }
+
+    @keyframes flipY {
+      0% {
+        transform: rotateY(0deg);
+      }
+      100% {
+        transform: rotateY(360deg);
+      }
+    }
+
+    .floating {
+      animation: float 2.5s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen flex items-center justify-center px-4 py-8 transition-colors">
+  <div class="bg-white dark:bg-gray-800 shadow-xl rounded-xl p-6 max-w-xl w-full transition-all">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold text-blue-600 dark:text-purple-400 floating">🔁 Palindrome Checker</h1>
+      <button id="themeToggle" class="text-xl px-3 py-1 rounded-full dark:bg-gray-700 dark:text-white bg-gray-200 text-gray-800 hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+        🌙
+      </button>
+    </div>
+
+    <form method="POST" class="space-y-4">
+      <input
+        type="text"
+        name="input_text"
+        value="{{ input_text }}"
+        placeholder="Enter a word or phrase"
+        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-gray-900 focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
+        required
+      />
+
+      <button
+        type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition"
+      >
+        Check Palindrome
+      </button>
+    </form>
+
+    {% if result %}
+      <div class="mt-6 text-center fade-in">
+        {% if highlight %}
+          <p class="text-green-600 dark:text-green-400 font-bold text-lg">
+            ✅ {{ result }}
+          </p>
+          <p class="mt-2 text-xl font-mono bg-green-100 dark:bg-green-800 p-3 rounded text-gray-900 dark:text-white flip">
+            {{ input_text }}
+          </p>
+        {% else %}
+          <p class="text-red-600 dark:text-red-400 font-bold text-lg">
+            ❌ {{ result }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById("themeToggle");
+    const html = document.documentElement;
+
+    toggleBtn.addEventListener("click", () => {
+      html.classList.toggle("dark");
+      localStorage.setItem("dark-mode", html.classList.contains("dark"));
+      toggleBtn.textContent = html.classList.contains("dark") ? "🌞" : "🌙";
+    });
+
+    if (localStorage.getItem("dark-mode") === "true") {
+      html.classList.add("dark");
+      toggleBtn.textContent = "🌞";
+    }
+  </script>
+</body>
+</html>

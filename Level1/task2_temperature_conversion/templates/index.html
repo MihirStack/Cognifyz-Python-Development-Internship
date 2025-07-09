@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" class="transition-colors duration-300">
+<head>
+  <meta charset="UTF-8" />
+  <title>Temperature Converter</title>
+  <link rel="icon" href="/static/temperatures.png" type="image/x-icon" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: "class" };
+  </script>
+  <style>
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fade-in {
+      animation: fade-in 0.5s ease-out;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 dark:bg-gray-900 dark:text-white min-h-screen flex items-center justify-center p-4 font-sans">
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 max-w-md w-full">
+    
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-2">
+      <span class="text-2xl sm:text-3xl font-bold text-center">🌡️</span>
+      <h1 class="text-2xl sm:text-3xl font-bold text-center text-blue-600 dark:text-purple-400">
+        Temperature Converter
+      </h1>
+      <!-- Dark Mode Button -->
+      <button
+        id="themeToggleBtn"
+        class="text-xl bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-3 py-1 rounded-full transition-colors hover:bg-gray-300 dark:hover:bg-gray-600"
+        title="Toggle Dark Mode"
+      >
+        🌞
+      </button>
+    </div>
+
+    <!-- Form -->
+    <form method="POST" class="space-y-4">
+      <input
+        type="text"
+        name="temperature"
+        placeholder="Enter temperature"
+        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring focus:ring-blue-300 dark:focus:ring-purple-500"
+        required
+      />
+
+      <div class="flex justify-between gap-4">
+        <div class="w-1/2">
+          <label class="block mb-1 text-sm font-medium">From</label>
+          <select
+            name="from_unit"
+            class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+          >
+            <option value="C">Celsius</option>
+            <option value="F">Fahrenheit</option>
+            <option value="K">Kelvin</option>
+          </select>
+        </div>
+
+        <div class="w-1/2">
+          <label class="block mb-1 text-sm font-medium">To</label>
+          <select
+            name="to_unit"
+            class="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"
+          >
+            <option value="C">Celsius</option>
+            <option value="F">Fahrenheit</option>
+            <option value="K">Kelvin</option>
+          </select>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition"
+      >
+        Convert
+      </button>
+    </form>
+
+    <!-- Result -->
+    {% if result %}
+    <div class="mt-6 bg-green-100 dark:bg-green-800 dark:text-white text-green-800 p-4 rounded text-center font-semibold animate-fade-in">
+      {{ result }}
+    </div>
+    {% endif %}
+
+    <!-- Error -->
+    {% if error %}
+    <div class="mt-6 bg-red-100 dark:bg-red-800 dark:text-white text-red-700 p-4 rounded text-center font-medium animate-fade-in">
+      {{ error }}
+    </div>
+    {% endif %}
+
+    <!-- History -->
+    {% if history %}
+    <div class="mt-8">
+      <h3 class="text-lg font-semibold mb-2">Recent Conversions</h3>
+      <ul class="list-disc list-inside text-sm text-gray-700 dark:text-gray-300 space-y-1">
+        {% for entry in history %}
+        <li class="animate-fade-in">{{ entry }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Dark Mode Script -->
+  <script>
+    const html = document.documentElement;
+    const themeBtn = document.getElementById("themeToggleBtn");
+
+    function updateThemeIcon() {
+      themeBtn.textContent = html.classList.contains("dark") ? "🌙" : "🌞";
+    }
+
+    themeBtn.addEventListener("click", () => {
+      html.classList.toggle("dark");
+      localStorage.setItem("dark-mode", html.classList.contains("dark"));
+      updateThemeIcon();
+    });
+
+    // On load
+    if (localStorage.getItem("dark-mode") === "true") {
+      html.classList.add("dark");
+    }
+    updateThemeIcon();
+  </script>
+</body>
+</html>

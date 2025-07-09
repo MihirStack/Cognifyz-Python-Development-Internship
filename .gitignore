@@ -1,0 +1,17 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+env/
+
+# Streamlit cache
+.streamlit/
+
+# IDE files
+.idea/
+*.iml
+
+# System files
+.DS_Store
