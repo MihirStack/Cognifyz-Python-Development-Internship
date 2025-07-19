@@ -1,22 +1,36 @@
 from flask import Flask, render_template, request, jsonify
 import re
+from dotenv import load_dotenv
+import os
 
-app = Flask(__name__)
+load_dotenv()
 
-def is_valid_email(email):
-    """Basic regex for email validation."""
-    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
-    return re.match(pattern, email) is not None
+# Create our web app
+app = Flask(
+    __name__,
+    template_folder='assets/template',  # HTML files here
+    static_folder='assets'  # CSS, JS, images here
+)
 
-def validate_email(email):
-    """Detailed email validation with feedback."""
-    if not email:
-        return "❌ Email cannot be empty."
+# Does this string look like an email?
+def resembles_email(email):
+    """Basic pattern check for email format"""
+    # We want: text@text.text
+    email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    return re.search(email_pattern, email) is not None
+
+# Checking emails properly
+def inspect_email(email):
+    if not email or email.isspace():
+        return "❌ You didn't type anything!"
 
     if '@' not in email:
-        return "❌ Missing '@' symbol."
+        return "❌ Email needs an @ symbol!"
 
+    # Split around the @
     username_domain = email.split('@')
+
+    # Should have exactly two parts
     if len(username_domain) != 2:
         return "❌ Email must have one '@' symbol only."
 
@@ -29,20 +43,38 @@ def validate_email(email):
     if len(username_domain[1].split('.')) < 2:
         return "❌ Domain must include extension (e.g., '.com')."
 
-    if not is_valid_email(email):
-        return "❌ Invalid email format."
+    # Final pattern check
+    if not resembles_email(email):
+        return "❌ Hmm, this doesn't look quite right"
 
-    return f"✅ '{email}' is a valid email address!"
+    # If everything looks good!
+    return f"✅ Nice! '{email}' is perfect!"
 
 @app.route('/')
-def index():
+def email_checker_page():
     return render_template('index.html')
 
-@app.route('/validate_email', methods=['POST'])
-def validate_email_route():
-    email = request.json.get('email', '').strip()
-    result = validate_email(email)
-    return jsonify(result=result)
+# Handle email checks from the browser
+@app.route('/test_email', methods=['POST'])
+def check_email_api():
+    raw_email = request.json.get('email', '').strip()
 
+    email_result = inspect_email(raw_email)
+
+    # Send back the result
+    return jsonify(result=email_result)
+
+# Run our app
 if __name__ == "__main__":
-    app.run(debug=True)
+    debug_setting = False
+    if os.getenv("DEBUG", "true").lower() == "true":
+        debug_setting = True
+
+    port_num = 1002
+    try:
+        port_num = int(os.getenv("LEVEL1_TASK3_PORT", "1002"))
+    except ValueError:
+        port_num = 1002
+
+    # Start the app
+    app.run(debug=debug_setting, port=port_num)
