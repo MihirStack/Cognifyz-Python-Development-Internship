@@ -1,66 +1,120 @@
-https://grok.com/chat/a652f7d3-3a15-475a-b38a-0a8c90f9bda1
-
-
 # Cognifyz Technologies Internship Project
 
-This repository contains my solutions for the Python Development internship tasks provided by Cognifyz Technologies.
+This repository contains my solutions for the Python Development internship tasks provided by Cognifyz Technologies. The project is organized into three levels: Beginner (Level 1), Intermediate (Level 2), and Advanced (Level 3), with each level containing specific tasks.
 
-## Structure
-- **Level1**: Beginner tasks (5 tasks).
-- **Level2**: Intermediate tasks (5 tasks).
-- **Level3**: Advanced tasks (3 tasks).
+## Overview
+
+- **Level 1**: 5 beginner tasks to build foundational Python and Streamlit skills.
+- **Level 2**: 5 intermediate tasks to enhance problem-solving and UI development.
+- **Level 3**: 3 advanced tasks, including automation, web scraping, and data visualization.
 
 ## Setup
-1. Install required packages:
-   pip install -r requirements.txt
 
-Run the following command in your project directory:
-
-pip install -r requirements.txt
+### 1. Clone the Repository:
+- Navigate to your project directory (e.g., D:\TreasureHouse\Projects\) and clone  or copy the internship_project folder.
 
 
-   internship_project/
-├── Level1/
-│   ├── task1_string_reversal/
-│   │   ├── app.py  # Streamlit app for UI
-│   │   └── assets/  # Optional folder for HTML, CSS, etc.
-│   ├── task2_temperature_conversion/
-│   │   ├── app.py
-│   │   └── assets/
-│   ├── task3_email_validator/
-│   │   ├── app.py
-│   │   └── assets/
-│   ├── task4_calculator/
-│   │   ├── app.py
-│   │   └── assets/
-│   └── task5_palindrome_checker/
-│       ├── app.py
-│       └── assets/
-├── Level2/
-│   ├── task1_guessing_game/
-│   │   ├── app.py
-│   │   └── assets/
-│   ├── task2_number_guesser/
-│   │   ├── app.py
-│   │   └── assets/
-│   ├── task3_password_strength/
-│   │   ├── app.py
-│   │   └── assets/
-│   ├── task4_fibonacci/
-│   │   ├── app.py
-│   │   └── assets/
-│   └── task5_file_manipulation/
-│       ├── app.py
-│       └── assets/
-├── Level3/
-│   ├── task1_web_scraper/
-│   │   ├── app.py
-│   │   └── assets/
-│   ├── task2_data_visualization/
-│   │   ├── app.py
-│   │   └── assets/
-│   └── task3_automation/
-│       ├── app.py
-│       └── assets/
-├── README.md
-└── requirements.txt
+### 2. Install Required Packages:
+- Ensure Python 3.x is installed.
+- Install dependencies using the provided requirements file:
+- `` pip install -r requirements.txt ``
+- Expected packages include streamlit, flask, and others depending on task needs.
+
+
+### 3. Verify Environment:
+- Check Python version: ``python --version``.
+- Ensure ``pip`` is up to date: ``pip install --upgrade pip``.
+
+
+## Usage
+### Running Each Task
+- Navigate to the specific task folder (e.g., Level1/task1_string_reversal/).
+- Use the appropriate command based on the task (Streamlit for most, Flask for Level 3 Task 3).
+
+## Level 1 Tasks
+- ### Task 1: String Reversal
+    - Command: python app.py
+    - URL: http://localhost:1000
+    - Description: Reverses input strings with a simple UI.
+
+- ### Task 2: Temperature Conversion
+    - Command: python app.py
+    - URL: http://localhost:1001
+    - Description: Converts between Celsius and Fahrenheit.
+
+- ### Task 3: Email Validator
+    - Command: python app.py
+    - URL: http://localhost:1002
+    - Description: Validates email addresses.
+
+- ### Task 4: Calculator
+    - Command: python app.py
+    - URL: http://localhost:1003
+    - Description: Performs basic arithmetic operations.
+
+- ### Task 5: Palindrome Checker
+    - Command: python app.py
+    - URL: http://localhost:1004
+    - Description: Checks if a string is a palindrome.
+
+## Level 2 Tasks
+
+- ### Task 1: Guessing Game
+    - Command: python app.py
+    - URL: http://localhost:1005
+    - Description: User guesses a random number.
+
+- ### Task 2: Number Guesser
+    - Command: python app.py
+    - URL: http://localhost:1006
+    - Description: Computer guesses a user’s number.
+
+- ### Task 3: Password Strength
+    - Command: python app.py
+    - URL: http://localhost:1007
+    - Description: Evaluates password strength.
+
+- ### Task 4: Fibonacci
+    - Command: python app.py
+    - URL: http://localhost:1008
+    - Description: Generates Fibonacci sequence.
+
+- ### Task 5: File Manipulation
+    - Command: python app.py
+    - URL: http://localhost:1009
+    - Description: Basic file operations with UI.
+
+## Level 3 Tasks
+
+- ### Task 1: Web Scraper
+    - Command: python app.py
+    - URL: http://localhost:1010
+    - Description: Scrapes data from a webpage.
+
+- ### Task 2: Data Visualization
+    - Command: python -m streamlit run app.py
+    - URL: http://localhost:8501
+    - Description: Visualizes data using charts (e.g., sample data or user input).
+
+- ### Task 3: Automation
+    - Command: python app.py
+    - URL: http://localhost:1012
+    - Description: Automates file organization with a responsive black-themed UI using Tailwind CSS, including a loader during processing and a reset button.
+
+
+
+## Features
+- Responsive Design: All UIs adapt to different screen sizes (mobile, tablet, desktop).
+- Dark Theme: Consistent black theme across tasks for a modern look.
+- Automation UI: Level 3 Task 3 includes a loader animation and progress feedback.
+- Reset Functionality: Allows clearing inputs and results in Task 3 automation UI.
+
+## License
+  No specific license is applied. This project is for educational purposes under Cognifyz Technologies.
+
+## Acknowledgements
+- Thanks to Cognifyz Technologies for the internship opportunity.
+- Utilized Streamlit and Flask for UI development, with Tailwind CSS for Task 3 automation styling.
+
+Contact
+For queries, contact the internship coordinator or use the email provided during onboarding (e.g., developermihir13@gmail.com).

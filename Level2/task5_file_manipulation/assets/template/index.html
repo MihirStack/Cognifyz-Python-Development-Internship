@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>File Word Counter</title>
+  <link rel="icon" href="/static/file.png" type="image/x-icon" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-white min-h-screen flex items-center justify-center px-4 py-8">
+
+  <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 max-w-2xl w-full space-y-4">
+    <div class="flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-blue-600 dark:text-purple-400">📄 Word Frequency Analyzer</h1>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" class="space-y-4">
+      <input type="file" name="text_file" accept=".txt" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white" required>
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition">Analyze File</button>
+    </form>
+
+    {% if error %}
+      <div class="p-3 bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-200 rounded">
+        {{ error }}
+      </div>
+    {% endif %}
+
+    {% if word_data %}
+      <div class="overflow-auto max-h-96 mt-4">
+        <table class="w-full text-left border border-gray-200 dark:border-gray-700">
+          <thead class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+            <tr>
+              <th class="px-4 py-2 border-r dark:border-gray-600">Word</th>
+              <th class="px-4 py-2">Count</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-gray-800">
+            {% for word, count in word_data %}
+            <tr class="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+              <td class="px-4 py-2 border-r dark:border-gray-600">{{ word }}</td>
+              <td class="px-4 py-2">{{ count }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-4 text-center">
+        <a href="/download" class="inline-block bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded transition">⬇️ Download CSV</a>
+      </div>
+    {% endif %}
+  </div>
+
+</body>
+</html>

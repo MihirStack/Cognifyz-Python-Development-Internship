@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>File Organizer</title>
+    <link rel="icon" href="{{ url_for('static', filename='documentation.png') }}" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .progress-bar {
+            width: 0;
+            height: 10px;
+            background: linear-gradient(90deg, #00bcd4, #42a5f5);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        .collapsible { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
+        .collapsible.open { max-height: 500px; }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #00bcd4;
+            border-radius: 50%;
+            width: 24px; height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+            display: none;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #result { max-height: 300px; overflow-y: auto; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 font-sans min-h-screen">
+    <div class="container mx-auto p-6 max-w-3xl">
+        <div class="bg-gray-800 rounded-xl shadow-xl p-6">
+            <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 text-center mb-6">File Organizer Automation</h1>
+            <form id="organizeForm" class="space-y-6">
+                <div class="p-4 bg-gray-700 rounded-lg">
+                    <label for="source" class="block text-lg mb-2">Source Directory</label>
+                    <input type="text" id="source" placeholder="e.g., D:/demo_source" class="w-full p-3 bg-gray-600 rounded-lg">
+                    <span id="sourceError" class="text-red-400 text-sm hidden">Please enter source.</span>
+                </div>
+                <div class="p-4 bg-gray-700 rounded-lg">
+                    <label for="dest" class="block text-lg mb-2">Destination Directory</label>
+                    <input type="text" id="dest" placeholder="e.g., D:/demo_organized" class="w-full p-3 bg-gray-600 rounded-lg">
+                    <span id="destError" class="text-red-400 text-sm hidden">Please enter destination.</span>
+                </div>
+                <div class="p-4 bg-gray-700 rounded-lg">
+                    <label for="option" class="block text-lg mb-2">Organize By</label>
+                    <select id="option" class="w-full p-3 bg-gray-600 rounded-lg">
+                        <option value="type">Type</option>
+                        <option value="date">Date</option>
+                        <option value="flat">Flat Structure</option>
+                    </select>
+                </div>
+                <div class="flex space-x-4">
+                    <button type="submit" class="w-full bg-cyan-500 text-black p-3 rounded-lg hover:bg-cyan-600">Organize Files</button>
+                    <button type="button" id="resetBtn" class="w-full bg-gray-600 p-3 rounded-lg hover:bg-gray-700">Reset</button>
+                </div>
+                <div class="flex justify-center mt-2" id="loaderContainer"><div class="loader" id="loader"></div></div>
+                <div class="progress-bar mt-2" id="progressBar"></div>
+            </form>
+
+            <div id="result" class="mt-6 collapsible space-y-3 overflow-y-auto px-2 py-2 bg-gray-700 rounded-md"></div>
+            <p class="text-center text-gray-400 mt-4 text-sm">Note: Files will be organized by extension or date. Only regular files are considered.</p>
+        </div>
+    </div>
+
+    <script>
+        const getFileIcon = (filename) => {
+            const ext = filename.split('.').pop().toLowerCase();
+            const map = {
+                'jpg': 'fa-image', 'jpeg': 'fa-image', 'png': 'fa-image',
+                'pdf': 'fa-file-pdf', 'txt': 'fa-file-lines', 'csv': 'fa-file-csv',
+                'zip': 'fa-file-zipper', 'doc': 'fa-file-word', 'docx': 'fa-file-word',
+                'xls': 'fa-file-excel', 'xlsx': 'fa-file-excel', 'ppt': 'fa-file-powerpoint',
+                'mp3': 'fa-file-audio', 'mp4': 'fa-file-video', 'py': 'fa-file-code',
+                'js': 'fa-file-code', 'html': 'fa-file-code', 'css': 'fa-file-code'
+            };
+            return `<i class="fas ${map[ext] || 'fa-file'} text-cyan-400 mr-2"></i>`;
+        };
+
+        document.getElementById('organizeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const source = document.getElementById('source').value;
+            const dest = document.getElementById('dest').value;
+            const option = document.getElementById('option').value;
+            const resultDiv = document.getElementById('result');
+            const progressBar = document.getElementById('progressBar');
+            const loader = document.getElementById('loader');
+            const loaderContainer = document.getElementById('loaderContainer');
+            const sourceError = document.getElementById('sourceError');
+            const destError = document.getElementById('destError');
+
+            sourceError.classList.add('hidden');
+            destError.classList.add('hidden');
+
+            if (!source) { sourceError.classList.remove('hidden'); return; }
+            if (!dest) { destError.classList.remove('hidden'); return; }
+
+            progressBar.style.width = '0';
+            loaderContainer.style.display = 'flex';
+            resultDiv.classList.remove('open');
+            resultDiv.innerHTML = '';
+
+            fetch('/organize', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ source, dest, option })
+            })
+            .then(response => response.json())
+            .then(data => {
+                loaderContainer.style.display = 'none';
+                resultDiv.classList.add('open', 'fade-in');
+                resultDiv.innerHTML = data.message ? `<p class="${data.message.includes('Error') ? 'text-red-400' : 'text-green-400'} font-semibold">${data.message}</p>` : '';
+                if (data.files) {
+                    data.files.forEach(file => {
+                        resultDiv.innerHTML += `<div class="text-sm">${getFileIcon(file.name)} <strong>${file.name}</strong> → <span class="text-cyan-300">${file.dest}</span></div>`;
+                    });
+                }
+                progressBar.style.width = '100%';
+            })
+            .catch(error => {
+                loaderContainer.style.display = 'none';
+                resultDiv.classList.add('open', 'fade-in');
+                resultDiv.innerHTML = `<p class="text-red-400 text-lg">Error: ${error.message}</p>`;
+            });
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', function () {
+            document.getElementById('organizeForm').reset();
+            document.getElementById('result').classList.remove('open');
+            document.getElementById('result').innerHTML = '';
+            document.getElementById('progressBar').style.width = '0';
+            document.getElementById('loaderContainer').style.display = 'none';
+            document.getElementById('sourceError').classList.add('hidden');
+            document.getElementById('destError').classList.add('hidden');
+        });
+    </script>
+</body>
+</html>

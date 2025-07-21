@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" class="transition duration-300">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Strength Checker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' }
+  </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 w-full max-w-md">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold text-blue-600 dark:text-purple-400">🔐 Password Checker</h1>
+      <button id="themeToggle" class="px-3 py-1 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition">🌙</button>
+    </div>
+
+    <div class="space-y-4 relative">
+      <div class="relative">
+        <input
+          type="password"
+          id="passwordInput"
+          placeholder="Type your password..."
+          class="w-full px-4 py-2 pr-10 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
+          autocomplete="off"
+        />
+        <span id="togglePassword" class="absolute right-3 top-2.5 cursor-pointer text-xl text-gray-600 dark:text-gray-300">🙈</span>
+      </div>
+
+      <div id="feedbackBox" class="p-3 rounded text-sm font-medium hidden"></div>
+    </div>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById("themeToggle");
+    const html = document.documentElement;
+
+    toggleBtn.addEventListener("click", () => {
+      html.classList.toggle("dark");
+      localStorage.setItem("dark-mode", html.classList.contains("dark"));
+      toggleBtn.textContent = html.classList.contains("dark") ? "🌞" : "🌙";
+    });
+
+    if (localStorage.getItem("dark-mode") === "true") {
+      html.classList.add("dark");
+      toggleBtn.textContent = "🌞";
+    }
+
+    // Show/hide password
+    const passwordInput = document.getElementById("passwordInput");
+    const togglePassword = document.getElementById("togglePassword");
+
+    togglePassword.addEventListener("click", () => {
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        togglePassword.textContent = "👁️";
+      } else {
+        passwordInput.type = "password";
+        togglePassword.textContent = "🙈";
+      }
+    });
+
+    // Fetch password strength on input
+    const feedbackBox = document.getElementById("feedbackBox");
+
+    passwordInput.addEventListener("input", async () => {
+      const password = passwordInput.value;
+      if (password.trim() === "") {
+        feedbackBox.classList.add("hidden");
+        return;
+      }
+
+      const response = await fetch("/check-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ password })
+      });
+      const data = await response.json();
+
+      feedbackBox.classList.remove("hidden");
+      feedbackBox.textContent = data.feedback;
+      feedbackBox.className = "mt-2 p-3 rounded text-sm font-medium fade-in";
+
+      if (data.strength === "Strong") {
+        feedbackBox.classList.add("bg-green-100", "text-green-800", "dark:bg-green-800", "dark:text-green-200");
+      } else if (data.strength === "Medium") {
+        feedbackBox.classList.add("bg-yellow-100", "text-yellow-800", "dark:bg-yellow-700", "dark:text-yellow-200");
+      } else {
+        feedbackBox.classList.add("bg-red-100", "text-red-800", "dark:bg-red-800", "dark:text-red-200");
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" class="transition-colors duration-300">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guessing Game</title>
+  <link rel="icon" href="{{ url_for('static', filename='speech-bubble.png') }}" type="image/x-icon" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+  </script>
+  <style>
+    .fade-in {
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-white min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 max-w-md w-full">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold text-blue-600 dark:text-purple-400">🎲 Guessing Game</h1>
+      <button id="themeToggle" class="text-xl px-3 py-1 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+        🌙
+      </button>
+    </div>
+
+    <form method="POST" class="space-y-4">
+      <input
+        type="number"
+        name="guess"
+        placeholder="Enter a number (1-100)"
+        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
+        required
+        {% if game_over %} disabled {% endif %}
+      />
+
+      <button
+        type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition"
+        {% if game_over %} disabled {% endif %}
+      >
+        Guess
+      </button>
+    </form>
+
+    <div class="mt-4 text-sm text-gray-700 dark:text-gray-300">
+      Attempts Done: <strong>{{ attempts_done }}</strong>
+    </div>
+
+    {% if hint %}
+    <div class="mt-4 p-3 rounded bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200 fade-in">
+      {{ hint }}
+    </div>
+    {% endif %}
+
+    {% if result %}
+    <div class="mt-4 p-3 rounded bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 font-semibold text-center fade-in">
+      {{ result }}
+    </div>
+    {% endif %}
+
+    {% if score_text %}
+    <div class="mt-2 text-center text-green-600 dark:text-green-400 font-bold fade-in">
+      {{ score_text }}
+    </div>
+    {% endif %}
+
+    {% if game_over %}
+    <div class="mt-6 text-center">
+      <a href="/" class="inline-block px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold transition">
+        🔁 Restart Game
+      </a>
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById("themeToggle");
+    const html = document.documentElement;
+
+    toggleBtn.addEventListener("click", () => {
+      html.classList.toggle("dark");
+      localStorage.setItem("dark-mode", html.classList.contains("dark"));
+      toggleBtn.textContent = html.classList.contains("dark") ? "🌞" : "🌙";
+    });
+
+    if (localStorage.getItem("dark-mode") === "true") {
+      html.classList.add("dark");
+      toggleBtn.textContent = "🌞";
+    }
+  </script>
+</body>
+</html>

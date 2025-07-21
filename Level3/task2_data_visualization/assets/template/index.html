@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" class="transition-colors duration-300">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Data Visualization Tool</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .fade-in {
+      animation: fadeIn 0.4s ease-in-out both;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-white min-h-screen flex items-center justify-center p-6">
+
+  <div class="w-full max-w-3xl bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl fade-in">
+    <h1 class="text-3xl font-bold text-blue-600 dark:text-yellow-300 mb-4 text-center">Data Visualization Tool</h1>
+    <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 text-center">Upload a CSV file and generate interactive charts.</p>
+
+    <!-- Upload CSV -->
+    <form action="/upload" method="POST" enctype="multipart/form-data" class="space-y-4">
+      <input type="file" name="csv_file" accept=".csv"
+        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700" required />
+
+      <!-- Chart Type -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="chart_type" class="block text-sm font-medium mb-1">Chart Type</label>
+          <select name="chart_type" id="chart_type" class="w-full p-2 rounded border border-gray-300 dark:bg-gray-700 dark:text-white">
+            <option>Scatter</option>
+            <option>Bar</option>
+            <option>Line</option>
+          </select>
+        </div>
+
+        <!-- X and Y Column Selectors (to be populated dynamically) -->
+        <div>
+          <label for="x_column" class="block text-sm font-medium mb-1">X-axis Column</label>
+          <input type="text" name="x_column" id="x_column" placeholder="Enter X column"
+            class="w-full p-2 rounded border border-gray-300 dark:bg-gray-700 dark:text-white" required />
+        </div>
+        <div>
+          <label for="y_column" class="block text-sm font-medium mb-1">Y-axis Column</label>
+          <input type="text" name="y_column" id="y_column" placeholder="Enter Y column"
+            class="w-full p-2 rounded border border-gray-300 dark:bg-gray-700 dark:text-white" required />
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition">
+        📈 Generate Chart
+      </button>
+    </form>
+
+    <!-- Placeholder for Chart -->
+    <div class="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+      After submitting, your chart will appear here.
+    </div>
+  </div>
+</body>
+</html>
