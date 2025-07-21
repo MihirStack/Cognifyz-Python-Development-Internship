@@ -1,0 +1,80 @@
+CREATE DATABASE ecommerce;
+
+USE ecommerce;
+
+-- Categories table for section-wise structure
+CREATE TABLE Categories (
+    category_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    parent_id INT, -- For subcategories
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (parent_id) REFERENCES Categories(category_id)
+);
+
+-- Products table
+CREATE TABLE Products (
+    product_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    stock_quantity INT NOT NULL,
+    category_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES Categories(category_id)
+);
+
+-- Users table
+CREATE TABLE Users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL, -- Hashed password
+    role ENUM('customer', 'admin') DEFAULT 'customer',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Orders table
+CREATE TABLE Orders (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    status ENUM('pending', 'processing', 'shipped', 'delivered') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+-- Order Items table (for order-product mapping)
+CREATE TABLE Order_Items (
+    order_item_id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT,
+    product_id INT,
+    quantity INT NOT NULL,
+    price_at_time DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (product_id) REFERENCES Products(product_id)
+);
+
+-- Reviews table
+CREATE TABLE Reviews (
+    review_id INT PRIMARY KEY AUTO_INCREMENT,
+    product_id INT,
+    user_id INT,
+    rating INT CHECK (rating BETWEEN 1 AND 5),
+    comment TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES Products(product_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+-- AI Recommendations table (for storing user-product recommendations)
+CREATE TABLE Recommendations (
+    recommendation_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    product_id INT,
+    score FLOAT NOT NULL, -- Recommendation confidence score
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (product_id) REFERENCES Products(product_id)
+);

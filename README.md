@@ -2,6 +2,16 @@
 
 This repository contains my solutions for the Python Development internship tasks provided by Cognifyz Technologies. The project is organized into three levels: Beginner (Level 1), Intermediate (Level 2), and Advanced (Level 3), with each level containing specific tasks.
 
+
+### Intern Name: Mihir Borsaniya
+### Internship: Cognifyz Technologies
+### Project: Python & Web Development Internship
+- Level 1: Tasks 1–5 Completed
+- Level 2: Tasks 1–5 Completed
+- Level 3: Tasks 1–3 Completed
+Tech Used: Python, Flask, Tailwind, Streamlit, Matplotlib, BeautifulSoup, etc.
+
+
 ## Overview
 
 - **Level 1**: 5 beginner tasks to build foundational Python and Streamlit skills.
